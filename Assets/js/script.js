@@ -1,5 +1,6 @@
 $(document).ready(function() {
     initialize();
+
 });
 //member variables
 
@@ -175,6 +176,7 @@ $("#submitPlayerInitials").on("click", function () {
     if( pName.value==='')
         alert('Please enter your name !')
     else {
+        countOFPlayers=localStorage.getItem("count");
         countOFPlayers++;
         var nameOfPlayer = pName.value;
         var scoreObj = {
@@ -183,6 +185,7 @@ $("#submitPlayerInitials").on("click", function () {
         };
 
         // updated
+        localStorage.setItem("count",countOFPlayers );
         localStorage.setItem("player" + countOFPlayers, JSON.stringify(scoreObj));
         // alert('Successfully adding your score')
         HighScoreSec.style.display = "";
@@ -227,8 +230,8 @@ function getScores(){
 
 }
 
-//  get  all  scores  from local  storage
-function getScoresArray(){
+
+/*function getScoresArrayxx(){
     var array=[];
     for(var c=1; c<=countOFPlayers;c++){
         var obj=JSON.parse(localStorage.getItem("player"+c));
@@ -237,10 +240,37 @@ function getScoresArray(){
     return array;
 
 }
+//  get  all  scores  from local  storage
+function getScoresArraybkkkk(){
+var values = [],
+    keys = Object.keys(localStorage),
+    i = keys.length;
+
+while ( i-- ) {
+    values.push(JSON.parse(localStorage.getItem(keys[i])) );
+}
+
+return values;
+}*/
+//  get  all  scores  from local  storage
+function  getScoresArray () {
+    var values = [];
+    var   count=localStorage.getItem("count");
+    for (var c = 1; c <= count; c++) {
+        var obj = JSON.parse(localStorage.getItem("player" + c));
+        if(obj!==undefined)
+            values.push(obj);
+        else
+        break;
+     }
+
+     return values
+}
 
 // updated
 function perviewHighScore(){
     var array=getScoresArray();
+    console.log(array[0])
     var text='';
        if(array.length>0) {
         for(var i=0; i< array.length; i++){
@@ -256,6 +286,7 @@ function perviewHighScore(){
     defeatScn.style.display = "none";
     HighScoreSec.style.display = "";
     HighScoreLabel.style.display = "";
+    HighScoreLabel.innerHTML = getScores();
 
 }
 
@@ -327,6 +358,7 @@ $("#nextBtn").on("click", function () {
            }
            else {
                var playerOldScore = getScoresArray();
+               console.log("old  scores >>"+playerOldScore)
                var lastHighScore = 0;
                for(var i=0; i< playerOldScore.length ; i++ ){
                    if(playerOldScore[i].score>lastHighScore){
@@ -388,7 +420,7 @@ function checkAnswer(selectedAnswer){
         color='red'
 
     }
-      getWekiInfo(correctchoice);
+     getWekiInfo(correctchoice);
     results.innerHTML =answerStatus;
     results.style.color = color;
     nextBtn.disabled = false;
